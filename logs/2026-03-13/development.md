@@ -58,14 +58,36 @@
 ## 下一步计划
 
 ### 优先级 P0
-- [ ] 数据库设计（Prisma schema）
+- [x] 数据库设计（Prisma schema）
+- [x] 脚本生成页面
 - [ ] 用户认证（NextAuth.js）
-- [ ] 脚本生成页面
 
 ### 优先级 P1
 - [ ] 图片生成功能
 - [ ] 视频生成功能
 - [ ] 任务队列系统
+
+## 第二阶段开发（下午）
+
+### 数据库设计
+- ✅ 安装 Prisma + @prisma/client
+- ✅ 初始化 Prisma 配置
+- ✅ 设计数据模型：User, Project, Storyboard, Asset
+- ✅ 创建 Prisma 客户端实例
+
+### 脚本生成功能
+- ✅ 安装 @anthropic-ai/sdk
+- ✅ 创建 `/create` 页面（输入创意）
+- ✅ 创建 `/api/script/generate` API路由
+- ✅ 创建 `/script` 页面（展示脚本）
+- ✅ 实现从localStorage读取API配置
+- ✅ Claude API集成完成
+
+### 技术实现细节
+- API密钥通过请求头传递（x-api-key）
+- 脚本暂存在localStorage
+- 使用FormData处理文件上传
+- 错误处理和用户提示
 
 ## 问题与决策
 

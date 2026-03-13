@@ -18,7 +18,7 @@
 
 ## 已完成功能
 
-### 2026-03-13
+### 2026-03-13 上午
 - ✅ 项目初始化（Next.js 16 + Turbopack）
 - ✅ 设置页面：可自定义AI模型API提供商
   - 支持配置：脚本生成、图片生成、视频生成三种模型
@@ -28,6 +28,16 @@
 - ✅ Git仓库初始化
 - ✅ GitHub仓库创建并推送
 - ✅ 项目计划书创建
+
+### 2026-03-13 下午
+- ✅ 数据库设计（Prisma schema）
+  - User, Project, Storyboard, Asset 模型
+- ✅ 脚本生成功能完整实现
+  - `/create` 页面：输入创意和上传图片
+  - `/api/script/generate` API路由
+  - `/script` 页面：展示生成的分镜脚本
+  - Claude Opus 4.6 API集成
+- ✅ 安装依赖：Prisma, @anthropic-ai/sdk
 
 ## 技术决策
 
