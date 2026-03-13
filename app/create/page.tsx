@@ -2,6 +2,12 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { Input } from '@/components/ui/input'
+import Link from 'next/link'
 
 export default function CreatePage() {
   const router = useRouter()
@@ -53,40 +59,53 @@ export default function CreatePage() {
   }
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-green-50 to-slate-50 p-8">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">创建视频项目</h1>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="flex justify-between items-center mb-8">
           <div>
-            <label className="block text-sm font-medium mb-2">上传参考图片（可选）</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImage(e.target.files?.[0] || null)}
-              className="w-full p-2 border rounded"
-            />
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+              创建视频项目
+            </h1>
+            <p className="text-gray-600 mt-2">输入你的创意，让AI帮你生成脚本</p>
           </div>
+          <Link href="/">
+            <Button variant="outline">← 返回</Button>
+          </Link>
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-2">视频创意描述</label>
-            <textarea
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="描述你想要的视频内容，例如：一个关于咖啡制作过程的短视频，温馨的早晨氛围..."
-              className="w-full p-3 border rounded h-32"
-              required
-            />
-          </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>✨ 开始创作</CardTitle>
+            <CardDescription>描述你想要的视频内容，AI将为你生成专业的分镜脚本</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <Label>参考图片（可选）</Label>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImage(e.target.files?.[0] || null)}
+                />
+              </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
-          >
-            {loading ? '生成中...' : '生成分镜脚本'}
-          </button>
-        </form>
+              <div className="space-y-2">
+                <Label>视频创意描述 *</Label>
+                <Textarea
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  placeholder="例如：一个关于咖啡制作过程的短视频，温馨的早晨氛围，展示从研磨咖啡豆到倒入杯中的全过程..."
+                  className="h-32"
+                  required
+                />
+              </div>
+
+              <Button type="submit" disabled={loading} size="lg" className="w-full">
+                {loading ? '⏳ 生成中...' : '🚀 生成分镜脚本'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

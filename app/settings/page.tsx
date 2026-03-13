@@ -1,8 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { getConfig, saveConfig } from '@/lib/config'
 import { AIModels, AIProvider, APIType } from '@/types'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import Link from 'next/link'
 
 const providers: AIProvider[] = ['openai', 'anthropic', 'replicate', 'runway', 'pika', 'custom']
 const apiTypes: APIType[] = ['openai', 'anthropic', 'openai-compatible', 'custom']
@@ -18,36 +24,46 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50 to-slate-50 p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">AI模型设置</h1>
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+              AI模型设置
+            </h1>
+            <p className="text-gray-600 mt-2">配置你的AI服务提供商</p>
+          </div>
+          <Link href="/">
+            <Button variant="outline">← 返回</Button>
+          </Link>
+        </div>
 
         <div className="space-y-6">
-          {/* 脚本生成模型 */}
           <ModelConfigSection
-            title="脚本生成模型"
+            title="📝 脚本生成模型"
+            description="用于生成视频分镜脚本"
             config={config.scriptGenerator}
             onChange={(c) => setConfig({ ...config, scriptGenerator: c })}
           />
 
-          {/* 图片生成模型 */}
           <ModelConfigSection
-            title="图片生成模型"
+            title="🎨 图片生成模型"
+            description="根据脚本生成分镜图片"
             config={config.imageGenerator}
             onChange={(c) => setConfig({ ...config, imageGenerator: c })}
           />
 
-          {/* 视频生成模型 */}
           <ModelConfigSection
-            title="视频生成模型"
+            title="🎬 视频生成模型"
+            description="将图片转换为视频片段"
             config={config.videoGenerator}
             onChange={(c) => setConfig({ ...config, videoGenerator: c })}
           />
         </div>
 
-        <button
-          onClick={handleSave}
-          className="mt-8 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        <Button onClick={handleSave} size="lg" className="mt-8 w-full">
+          {saved ? '✓ 已保存' : '保存设置'}
+        </Button>
         >
           {saved ? '✓ 已保存' : '保存设置'}
         </button>
@@ -56,73 +72,70 @@ export default function SettingsPage() {
   )
 }
 
-function ModelConfigSection({ title, config, onChange }: any) {
+function ModelConfigSection({ title, description, config, onChange }: any) {
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <h2 className="text-xl font-semibold mb-4">{title}</h2>
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label>API提供商</Label>
+            <Select value={config.provider} onValueChange={(v) => onChange({ ...config, provider: v })}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {providers.map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
 
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-2">API提供商</label>
-          <select
-            value={config.provider}
-            onChange={(e) => onChange({ ...config, provider: e.target.value })}
-            className="w-full p-2 border rounded"
-          >
-            {providers.map(p => (
-              <option key={p} value={p}>{p}</option>
-            ))}
-          </select>
+          <div className="space-y-2">
+            <Label>API类型</Label>
+            <Select value={config.apiType} onValueChange={(v) => onChange({ ...config, apiType: v })}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {apiTypes.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-2">API类型</label>
-          <select
-            value={config.apiType}
-            onChange={(e) => onChange({ ...config, apiType: e.target.value })}
-            className="w-full p-2 border rounded"
-          >
-            {apiTypes.map(t => (
-              <option key={t} value={t}>{t}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2">模型名称</label>
-          <input
-            type="text"
+        <div className="space-y-2">
+          <Label>模型名称</Label>
+          <Input
             value={config.model}
             onChange={(e) => onChange({ ...config, model: e.target.value })}
-            className="w-full p-2 border rounded"
             placeholder="例如: claude-opus-4-6"
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-2">API Key</label>
-          <input
+        <div className="space-y-2">
+          <Label>API Key</Label>
+          <Input
             type="password"
             value={config.apiKey}
             onChange={(e) => onChange({ ...config, apiKey: e.target.value })}
-            className="w-full p-2 border rounded"
             placeholder="输入API密钥"
           />
         </div>
 
         {(config.provider === 'custom' || config.apiType === 'openai-compatible') && (
-          <div>
-            <label className="block text-sm font-medium mb-2">Base URL</label>
-            <input
-              type="text"
+          <div className="space-y-2">
+            <Label>Base URL</Label>
+            <Input
               value={config.baseUrl || ''}
               onChange={(e) => onChange({ ...config, baseUrl: e.target.value })}
-              className="w-full p-2 border rounded"
               placeholder="https://api.example.com"
             />
           </div>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }
