@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  name      String?
+  avatar    String?
+  createdAt DateTime  @default(now())
+  projects  Project[]
+}
+
+model Project {
+  id             String       @id @default(cuid())
+  userId         String
+  title          String
+  prompt         String       @db.Text
+  referenceImage String?
+  status         String       @default("draft")
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  storyboards    Storyboard[]
+  assets         Asset[]
+}
+
+model Storyboard {
+  id        String   @id @default(cuid())
+  projectId String
+  version   Int      @default(1)
+  scenes    Json
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Asset {
+  id        String   @id @default(cuid())
+  projectId String
+  type      String
+  url       String
+  metadata  Json?
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
