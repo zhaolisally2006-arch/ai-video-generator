@@ -44,3 +44,45 @@ export async function callImageAPI(config: ModelConfig, prompt: string) {
 
   throw new Error('不支持的API类型')
 }
+
+export async function callVideoAPI(config: ModelConfig, prompt: string, imageUrl?: string) {
+  const { apiType, apiKey, baseUrl, model } = config
+
+  if (apiType === 'openai' || apiType === 'openai-compatible') {
+    // OpenAI Sora API (假设接口)
+    const response = await fetch(`${baseUrl || 'https://api.openai.com'}/v1/videos/generations`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model,
+        prompt,
+        image: imageUrl,
+      }),
+    })
+    const data = await response.json()
+    return data.url || data.data?.[0]?.url
+  }
+
+  if (apiType === 'custom') {
+    // 自定义API格式
+    const response = await fetch(`${baseUrl}/generate`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model,
+        prompt,
+        image_url: imageUrl,
+      }),
+    })
+    const data = await response.json()
+    return data.video_url || data.url
+  }
+
+  throw new Error('不支持的API类型')
+}

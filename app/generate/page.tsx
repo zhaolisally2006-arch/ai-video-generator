@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
 interface SelectedImage {
@@ -9,6 +10,7 @@ interface SelectedImage {
 }
 
 export default function GeneratePage() {
+  const router = useRouter()
   const [images, setImages] = useState<SelectedImage[]>([])
   const [loading, setLoading] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -24,27 +26,40 @@ export default function GeneratePage() {
     setLoading(true)
     setProgress(0)
 
-    // 模拟视频生成进度
-    const interval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 90) {
-          clearInterval(interval)
-          return 90
-        }
-        return prev + 10
-      })
-    }, 1000)
-
     try {
-      // TODO: 实际的视频生成API调用
-      await new Promise(resolve => setTimeout(resolve, 10000))
+      const config = JSON.parse(localStorage.getItem('ai-models-config') || '{}')
+      const modelConfig = config.videoGenerator
+
+      if (!modelConfig?.apiKey) {
+        alert('请先在设置页面配置视频生成API密钥')
+        router.push('/settings')
+        return
+      }
+
+      const res = await fetch('/api/video/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-model-config': JSON.stringify(modelConfig),
+        },
+        body: JSON.stringify({ images }),
+      })
+
+      const data = await res.json()
+
+      if (data.error) {
+        alert(data.error)
+        return
+      }
+
       setProgress(100)
+      localStorage.setItem('generated-videos', JSON.stringify(data.videos))
       alert('视频生成完成！')
+      router.push('/editor')
     } catch (error) {
       console.error(error)
       alert('生成失败')
     } finally {
-      clearInterval(interval)
       setLoading(false)
     }
   }
