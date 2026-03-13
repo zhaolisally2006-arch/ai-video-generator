@@ -3,16 +3,19 @@ import { AIModels } from '@/types'
 const DEFAULT_CONFIG: AIModels = {
   scriptGenerator: {
     provider: 'anthropic',
+    apiType: 'anthropic',
     apiKey: '',
     model: 'claude-opus-4-6',
   },
   imageGenerator: {
     provider: 'openai',
+    apiType: 'openai',
     apiKey: '',
-    model: 'gpt-image-1.5',
+    model: 'dall-e-3',
   },
   videoGenerator: {
     provider: 'openai',
+    apiType: 'openai',
     apiKey: '',
     model: 'sora-2',
   },

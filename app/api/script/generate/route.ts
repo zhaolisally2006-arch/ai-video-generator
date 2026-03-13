@@ -1,24 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
+import { callTextAPI } from '@/lib/api-adapter'
+import { ModelConfig } from '@/types'
 
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData()
     const prompt = formData.get('prompt') as string
-    const apiKey = req.headers.get('x-api-key') || process.env.ANTHROPIC_API_KEY
+    const configStr = req.headers.get('x-model-config')
 
-    if (!apiKey) {
-      return NextResponse.json({ error: '未配置API密钥' }, { status: 400 })
+    if (!configStr) {
+      return NextResponse.json({ error: '未配置模型' }, { status: 400 })
     }
 
-    const anthropic = new Anthropic({ apiKey })
+    const config: ModelConfig = JSON.parse(configStr)
 
-    const message = await anthropic.messages.create({
-      model: config.scriptGenerator.model,
-      max_tokens: 2000,
-      messages: [{
-        role: 'user',
-        content: `生成一个短视频分镜脚本，基于以下创意：${prompt}
+    const fullPrompt = `生成一个短视频分镜脚本，基于以下创意：${prompt}
 
 要求：
 - 生成5个分镜
@@ -36,18 +32,13 @@ export async function POST(req: NextRequest) {
     }
   ]
 }`
-      }]
-    })
 
-    const content = message.content[0]
-    const scriptData = content.type === 'text' ? JSON.parse(content.text) : null
+    const response = await callTextAPI(config, fullPrompt)
+    const scriptData = JSON.parse(response)
 
-    return NextResponse.json({
-      success: true,
-      script: scriptData
-    })
-  } catch (error) {
+    return NextResponse.json({ success: true, script: scriptData })
+  } catch (error: any) {
     console.error(error)
-    return NextResponse.json({ error: '生成失败' }, { status: 500 })
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }

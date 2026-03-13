@@ -1,29 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
-import OpenAI from 'openai'
+import { callImageAPI } from '@/lib/api-adapter'
+import { ModelConfig } from '@/types'
 
 export async function POST(req: NextRequest) {
   try {
     const { scenes } = await req.json()
-    const apiKey = req.headers.get('x-api-key')
+    const configStr = req.headers.get('x-model-config')
 
-    if (!apiKey) {
-      return NextResponse.json({ error: '未配置API密钥' }, { status: 400 })
+    if (!configStr) {
+      return NextResponse.json({ error: '未配置模型' }, { status: 400 })
     }
 
-    const openai = new OpenAI({ apiKey })
+    const config: ModelConfig = JSON.parse(configStr)
     const results = []
 
     for (const scene of scenes) {
-      const response = await openai.images.generate({
-        model: 'dall-e-3',
-        prompt: scene.description,
-        n: 1,
-        size: '1024x1024',
-      })
-
+      const imageUrl = await callImageAPI(config, scene.description)
       results.push({
         sceneIndex: scene.index,
-        imageUrl: response.data[0].url,
+        imageUrl,
       })
     }
 

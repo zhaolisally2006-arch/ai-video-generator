@@ -15,9 +15,9 @@ export default function CreatePage() {
 
     try {
       const config = JSON.parse(localStorage.getItem('ai-models-config') || '{}')
-      const apiKey = config.scriptGenerator?.apiKey
+      const modelConfig = config.scriptGenerator
 
-      if (!apiKey) {
+      if (!modelConfig?.apiKey) {
         alert('请先在设置页面配置API密钥')
         router.push('/settings')
         return
@@ -30,7 +30,7 @@ export default function CreatePage() {
       const res = await fetch('/api/script/generate', {
         method: 'POST',
         headers: {
-          'x-api-key': apiKey,
+          'x-model-config': JSON.stringify(modelConfig),
         },
         body: formData,
       })
@@ -42,7 +42,6 @@ export default function CreatePage() {
         return
       }
 
-      // 暂存脚本到localStorage
       localStorage.setItem('current-script', JSON.stringify(data.script))
       router.push('/script')
     } catch (error) {

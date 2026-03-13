@@ -1,7 +1,9 @@
 export type AIProvider = 'openai' | 'anthropic' | 'replicate' | 'runway' | 'pika' | 'custom'
+export type APIType = 'openai' | 'anthropic' | 'openai-compatible' | 'custom'
 
 export interface ModelConfig {
   provider: AIProvider
+  apiType: APIType
   apiKey: string
   baseUrl?: string
   model: string

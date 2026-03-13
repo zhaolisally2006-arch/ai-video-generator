@@ -27,9 +27,9 @@ export default function ScriptPage() {
     setLoading(true)
     try {
       const config = JSON.parse(localStorage.getItem('ai-models-config') || '{}')
-      const apiKey = config.imageGenerator?.apiKey
+      const modelConfig = config.imageGenerator
 
-      if (!apiKey) {
+      if (!modelConfig?.apiKey) {
         alert('请先在设置页面配置图片生成API密钥')
         router.push('/settings')
         return
@@ -41,7 +41,7 @@ export default function ScriptPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
+          'x-model-config': JSON.stringify(modelConfig),
         },
         body: JSON.stringify({ scenes: scenesWithIndex }),
       })

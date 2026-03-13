@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { getConfig, saveConfig } from '@/lib/config'
-import { AIModels, AIProvider } from '@/types'
+import { AIModels, AIProvider, APIType } from '@/types'
 
 const providers: AIProvider[] = ['openai', 'anthropic', 'replicate', 'runway', 'pika', 'custom']
+const apiTypes: APIType[] = ['openai', 'anthropic', 'openai-compatible', 'custom']
 
 export default function SettingsPage() {
   const [config, setConfig] = useState<AIModels>(getConfig())
@@ -75,6 +76,19 @@ function ModelConfigSection({ title, config, onChange }: any) {
         </div>
 
         <div>
+          <label className="block text-sm font-medium mb-2">API类型</label>
+          <select
+            value={config.apiType}
+            onChange={(e) => onChange({ ...config, apiType: e.target.value })}
+            className="w-full p-2 border rounded"
+          >
+            {apiTypes.map(t => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
           <label className="block text-sm font-medium mb-2">模型名称</label>
           <input
             type="text"
@@ -96,7 +110,7 @@ function ModelConfigSection({ title, config, onChange }: any) {
           />
         </div>
 
-        {config.provider === 'custom' && (
+        {(config.provider === 'custom' || config.apiType === 'openai-compatible') && (
           <div>
             <label className="block text-sm font-medium mb-2">Base URL</label>
             <input
