@@ -63,8 +63,8 @@
 - [ ] 用户认证（NextAuth.js）
 
 ### 优先级 P1
-- [ ] 图片生成功能
-- [ ] 视频生成功能
+- [x] 图片生成功能
+- [ ] 视频生成功能（UI完成，API待实现）
 - [ ] 任务队列系统
 
 ## 第二阶段开发（下午）
@@ -83,11 +83,21 @@
 - ✅ 实现从localStorage读取API配置
 - ✅ Claude API集成完成
 
+### 图片生成功能
+- ✅ 安装 openai SDK
+- ✅ 创建 `/api/image/generate` API路由
+- ✅ 创建 `/images` 页面（展示和选择图片）
+- ✅ 创建 `/generate` 页面（视频生成）
+- ✅ DALL-E 3 API集成
+- ✅ 图片选择功能
+
 ### 技术实现细节
 - API密钥通过请求头传递（x-api-key）
 - 脚本暂存在localStorage
 - 使用FormData处理文件上传
 - 错误处理和用户提示
+- 图片选择使用Set数据结构
+- 进度条UI实现
 
 ## 问题与决策
 

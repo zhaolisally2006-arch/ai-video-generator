@@ -37,7 +37,13 @@
   - `/api/script/generate` API路由
   - `/script` 页面：展示生成的分镜脚本
   - Claude Opus 4.6 API集成
-- ✅ 安装依赖：Prisma, @anthropic-ai/sdk
+- ✅ 图片生成功能完整实现
+  - `/api/image/generate` API路由
+  - `/images` 页面：展示和选择图片
+  - DALL-E 3 API集成
+- ✅ 视频生成页面（UI完成）
+  - `/generate` 页面：进度条和预览
+- ✅ 安装依赖：Prisma, @anthropic-ai/sdk, openai
 
 ## 技术决策
 
