@@ -31,19 +31,30 @@
 
 ### 2026-03-13 下午
 - ✅ 数据库设计（Prisma schema）
-  - User, Project, Storyboard, Asset 模型
 - ✅ 脚本生成功能完整实现
-  - `/create` 页面：输入创意和上传图片
-  - `/api/script/generate` API路由
-  - `/script` 页面：展示生成的分镜脚本
-  - Claude Opus 4.6 API集成
 - ✅ 图片生成功能完整实现
-  - `/api/image/generate` API路由
-  - `/images` 页面：展示和选择图片
-  - DALL-E 3 API集成
-- ✅ 视频生成页面（UI完成）
-  - `/generate` 页面：进度条和预览
-- ✅ 安装依赖：Prisma, @anthropic-ai/sdk, openai
+- ✅ 视频生成功能完整实现
+- ✅ API适配器系统
+  - 支持多种API类型：openai, anthropic, openai-compatible, custom
+  - 统一的调用接口
+- ✅ 视频编辑器页面
+- ✅ 完整的MVP工作流
+
+## 当前架构
+
+### 页面流程
+1. `/` - 主页
+2. `/settings` - 配置AI模型
+3. `/create` - 输入创意
+4. `/script` - 查看脚本
+5. `/images` - 选择图片
+6. `/generate` - 生成视频
+7. `/editor` - 编辑导出
+
+### API路由
+- `/api/script/generate` - 脚本生成
+- `/api/image/generate` - 图片生成
+- `/api/video/generate` - 视频生成
 
 ## 技术决策
 

@@ -64,8 +64,28 @@
 
 ### 优先级 P1
 - [x] 图片生成功能
-- [ ] 视频生成功能（UI完成，API待实现）
+- [x] 视频生成功能（完成）
 - [ ] 任务队列系统
+
+## 第三阶段开发（下午-晚上）
+
+### API适配器系统
+- ✅ 创建统一的API适配器（lib/api-adapter.ts）
+- ✅ 支持多种API类型：openai, anthropic, openai-compatible, custom
+- ✅ 实现 callTextAPI, callImageAPI, callVideoAPI
+- ✅ 更新所有API路由使用适配器
+
+### 视频生成功能
+- ✅ 创建 `/api/video/generate` API路由
+- ✅ 更新 `/generate` 页面集成真实API
+- ✅ 创建 `/editor` 页面（视频编辑器）
+- ✅ 视频预览和导出UI
+
+### 配置系统增强
+- ✅ 添加 apiType 字段到配置
+- ✅ 设置页面支持选择API类型
+- ✅ 支持自定义Base URL
+- ✅ 传递完整配置对象而非单独密钥
 
 ## 第二阶段开发（下午）
 
