@@ -25,9 +25,42 @@ export default function ScriptPage() {
 
   const handleGenerateImages = async () => {
     setLoading(true)
-    // TODO: 实现图片生成
-    alert('图片生成功能开发中')
-    setLoading(false)
+    try {
+      const config = JSON.parse(localStorage.getItem('ai-models-config') || '{}')
+      const apiKey = config.imageGenerator?.apiKey
+
+      if (!apiKey) {
+        alert('请先在设置页面配置图片生成API密钥')
+        router.push('/settings')
+        return
+      }
+
+      const scenesWithIndex = scenes.map((scene, index) => ({ ...scene, index }))
+
+      const res = await fetch('/api/image/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+        },
+        body: JSON.stringify({ scenes: scenesWithIndex }),
+      })
+
+      const data = await res.json()
+
+      if (data.error) {
+        alert(data.error)
+        return
+      }
+
+      localStorage.setItem('generated-images', JSON.stringify(data.images))
+      router.push('/images')
+    } catch (error) {
+      console.error(error)
+      alert('生成失败，请重试')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
